@@ -60,4 +60,9 @@ public interface CheckinMapper
      * @return 结果
      */
     public int deleteCheckinByCheckinIds(String[] checkinIds);
+
+    /**
+     * 根据订单ID查询房间ID
+     */
+    String selectRoomIdByOrderId(String orderId);
 }

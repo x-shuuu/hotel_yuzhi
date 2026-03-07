@@ -133,6 +133,10 @@
                                type="primary" icon="School" @click="handleCheckIn(scope.row)">
                         入住登记
                     </el-button>
+                    <el-button v-if="scope.row.status ==='已入住'" link
+                               type="primary" icon="School" @click="handleCheckOut(scope.row)">
+                        退房
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -205,6 +209,8 @@ import {selectCategoryAllList} from "@/api/hotel/category.js";
 import {parseTime} from "../../../utils/yuzhi.js";
 import CheckInModal from "@/views/hotel/order/CheckInModal.vue";
 import OrderDetail from "@/views/hotel/order/OrderDetail.vue";
+import {addCheckout} from "@/api/hotel/checkout.js";
+import {ElMessage} from "element-plus";
 
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
@@ -258,6 +264,17 @@ const data = reactive({
 })
 
 const {queryParams, form, rules} = toRefs(data)
+
+//退房
+const handleCheckOut = (row) => {
+    const item = {
+        orderId: row.orderId
+    }
+    addCheckout(item).then(res => {
+        ElMessage.success('退房成功')
+        getList()
+    })
+}
 
 //订单详情弹窗组件实例
 const orderDetail = ref(null)
