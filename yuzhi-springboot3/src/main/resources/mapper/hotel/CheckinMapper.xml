@@ -11,6 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="name"    column="name"    />
         <result property="gender"    column="gender"    />
         <result property="phone"    column="phone"    />
+        <result property="roomNumber"    column="room_number"    />
     </resultMap>
 
     <sql id="selectCheckinVo">
@@ -18,11 +19,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
 
     <select id="selectCheckinList" parameterType="Checkin" resultMap="CheckinResult">
-        <include refid="selectCheckinVo"/>
+        select c.checkin_id, c.order_id, c.room_id, c.name, c.gender, c.phone, r.room_number
+        from checkin c
+        left join room r on c.room_id = r.room_id
         <where>  
-            <if test="orderId != null  and orderId != ''"> and order_id = #{orderId}</if>
-            <if test="roomId != null  and roomId != ''"> and room_id = #{roomId}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="orderId != null  and orderId != ''"> and c.order_id = #{orderId}</if>
+            <if test="roomId != null  and roomId != ''"> and c.room_id = #{roomId}</if>
+            <if test="name != null  and name != ''"> and c.name like concat('%', #{name}, '%')</if>
+            <if test="roomNumber != null  and roomNumber != ''">
+                and r.room_number like concat('%', #{roomNumber}, '%')
+            </if>
         </where>
     </select>
     

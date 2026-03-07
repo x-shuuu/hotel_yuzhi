@@ -2,6 +2,10 @@ package com.yuzhi.hotel.service.impl;
 
 import java.util.List;
 
+import com.yuzhi.hotel.domain.Order;
+import com.yuzhi.hotel.domain.Room;
+import com.yuzhi.hotel.service.IOrderService;
+import com.yuzhi.hotel.service.IRoomService;
 import com.yuzhi.system.general.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +15,7 @@ import com.yuzhi.hotel.service.ICheckinService;
 import org.apache.ibatis.session.ExecutorType;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -27,6 +32,12 @@ public class CheckinServiceImpl implements ICheckinService
 
     @Autowired
     private SqlSessionFactory sqlSessionFactory;
+
+    @Autowired
+    private IOrderService orderService;
+
+    @Autowired
+    private IRoomService roomService;
 
     /**
      * 查询入住登记
@@ -59,9 +70,24 @@ public class CheckinServiceImpl implements ICheckinService
      * @return 结果
      */
     @Override
+    @Transactional
     public int insertCheckin(Checkin checkin)
     {
         checkin.setCheckinId(IdUtils.fastUUID());
+
+        //1.订单状态变更为已入住
+        Order order = new Order();
+        order.setOrderId(checkin.getOrderId());
+        order.setStatus("已入住");
+        orderService.updateOrder(order);
+
+        //2.房间状态变更为已入住
+        Room room = new Room();
+        room.setRoomId(checkin.getRoomId());
+        room.setStatus("已入住");
+        roomService.updateRoom(room);
+
+        //3.增加一条入住登记记录
         return checkinMapper.insertCheckin(checkin);
     }
 

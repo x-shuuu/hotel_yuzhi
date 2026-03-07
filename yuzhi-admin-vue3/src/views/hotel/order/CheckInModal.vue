@@ -44,6 +44,7 @@
 
 //当前组件实例
 import {selectRoomNumberListByCategoryId} from "@/api/hotel/room.js";
+import {addCheckin} from "@/api/hotel/checkin.js";
 
 const {proxy} = getCurrentInstance()
 
@@ -82,6 +83,23 @@ const rules = ref({
     ]
 })
 
+//定义组件可触发的自定义事件
+const emit = defineEmits(['ok'])
+
+//提交按钮
+const submitForm = () => {
+    proxy.$refs["checkinRef"].validate(valid => {
+        if (valid) {
+            addCheckin(form.value).then(response => {
+                proxy.$modal.msgSuccess("登记成功")
+                open.value = false
+                emit('ok')
+            })
+        }
+    })
+}
+
+//对应房间类型的房间号列表
 const roomNumberList = ref()
 
 //父组件调用的方法

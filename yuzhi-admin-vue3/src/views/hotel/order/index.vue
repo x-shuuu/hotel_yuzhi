@@ -185,7 +185,7 @@
         </vxe-modal>
 
         <!-- 入住登记弹窗组件 -->
-        <CheckInModal ref="checkInModal"/>
+        <CheckInModal ref="checkInModal" @ok="getList"/>
 
     </div>
 </template>

@@ -41,5 +41,9 @@ public class Checkin extends BaseEntity
     @Excel(name = "电话号码")
     private String phone;
 
+    //房间号
+    @Excel(name = "房间号")
+    private String roomNumber;
+
 
 }

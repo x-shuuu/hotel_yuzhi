@@ -2,18 +2,18 @@
     <div class="app-container">
         <!-- 顶部搜索 -->
         <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-            <el-form-item label="订单ID" prop="orderId">
+            <el-form-item label="订单号" prop="orderId">
                 <el-input
                     v-model="queryParams.orderId"
-                    placeholder="请输入订单ID"
+                    placeholder="请输入订单号"
                     clearable
                     @keyup.enter="handleQuery"
                 />
             </el-form-item>
-            <el-form-item label="房间ID" prop="roomId">
+            <el-form-item label="房间号" prop="roomNumber">
                 <el-input
-                    v-model="queryParams.roomId"
-                    placeholder="请输入房间ID"
+                    v-model="queryParams.roomNumber"
+                    placeholder="请输入房间号"
                     clearable
                     @keyup.enter="handleQuery"
                 />
@@ -84,8 +84,8 @@
                   border v-loading="loading" :data="checkinList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center"/>
             <el-table-column label="序号" align="center" type="index" :index="indexMethod"/>
-            <el-table-column label="订单ID" align="center" prop="orderId"/>
-            <el-table-column label="房间ID" align="center" prop="roomId"/>
+            <el-table-column label="订单号" align="center" prop="orderId"/>
+            <el-table-column label="房间号" align="center" prop="roomNumber"/>
             <el-table-column label="姓名" align="center" prop="name"/>
             <el-table-column label="性别" align="center" prop="gender">
                 <template #default="scope">
@@ -118,8 +118,8 @@
         <!-- 添加或修改入住登记对话框 -->
         <vxe-modal :title="title" v-model="open" width="500px" show-maximize showFooter resize>
             <el-form ref="checkinRef" :model="form" :rules="rules" label-width="80px">
-                <el-form-item label="订单ID" prop="orderId">
-                    <el-input v-model="form.orderId" placeholder="请输入订单ID"/>
+                <el-form-item label="订单号" prop="orderId">
+                    <el-input v-model="form.orderId" placeholder="请输入订单号"/>
                 </el-form-item>
                 <el-form-item label="房间ID" prop="roomId">
                     <el-input v-model="form.roomId" placeholder="请输入房间ID"/>
@@ -176,10 +176,11 @@ const data = reactive({
         orderId: null,
         roomId: null,
         name: null,
+        roomNumber: null
     },
     rules: {
         orderId: [
-            {required: true, message: "订单ID不能为空", trigger: "blur"}
+            {required: true, message: "订单号不能为空", trigger: "blur"}
         ],
         roomId: [
             {required: true, message: "房间ID不能为空", trigger: "blur"}
