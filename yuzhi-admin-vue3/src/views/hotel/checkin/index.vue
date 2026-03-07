@@ -84,7 +84,13 @@
                   border v-loading="loading" :data="checkinList" @selection-change="handleSelectionChange">
             <el-table-column type="selection" width="55" align="center"/>
             <el-table-column label="序号" align="center" type="index" :index="indexMethod"/>
-            <el-table-column label="订单号" align="center" prop="orderId"/>
+            <el-table-column label="订单号" align="center" prop="orderId" width="200">
+                <template #default="scope">
+                    <el-link type="primary" @click="goToOrderDetail(scope.row.orderId)">
+                        {{ scope.row.orderId }}
+                    </el-link>
+                </template>
+            </el-table-column>
             <el-table-column label="房间号" align="center" prop="roomNumber"/>
             <el-table-column label="姓名" align="center" prop="name"/>
             <el-table-column label="性别" align="center" prop="gender">
@@ -145,12 +151,17 @@
                 </div>
             </template>
         </vxe-modal>
+
+        <!-- 订单详情弹窗组件 -->
+        <OrderDetail ref="orderDetail"/>
+
     </div>
 </template>
 
 <script setup name="Checkin">
 import {listCheckin, getCheckin, delCheckin, addCheckin, updateCheckin} from "@/api/hotel/checkin"
 import {getToken} from "@/utils/auth.js";
+import OrderDetail from "@/views/hotel/order/OrderDetail.vue";
 
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
@@ -198,6 +209,14 @@ const data = reactive({
 })
 
 const {queryParams, form, rules} = toRefs(data)
+
+//订单详情弹窗组件实例
+const orderDetail = ref(null)
+
+//打开订单详情弹窗组件
+const goToOrderDetail = (orderId) => {
+    orderDetail.value.handleOpen(orderId)
+}
 
 //点击行 获取行
 const clickRow = (row) => {
