@@ -1,5 +1,6 @@
 <template>
     <div>
+        <CustomerServiceChat />
         <!--头部-->
         <div class="header-container">
             <div class="header">
@@ -57,6 +58,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getUser } from "@/api/system/user"
 import useUserStore from "@/store/modules/user.js";
 import {ElMessageBox} from "element-plus";
+import CustomerServiceChat from "@/components/CustomerService/Chat.vue";
 
 const userStore = useUserStore()
 const route = useRoute()

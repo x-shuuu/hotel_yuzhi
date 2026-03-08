@@ -70,7 +70,6 @@ public class SysLoginController
     public AjaxResult getInfo()
     {
         LoginUser loginUser = SecurityUtils.getLoginUser();
-//        SysUser user = loginUser.getUser();
         SysUser user = userService.selectUserById(loginUser.getUserId());
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(user);
