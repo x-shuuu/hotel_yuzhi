@@ -99,6 +99,11 @@ export const constantRoutes = [
             component: () => import('@/views/HomePage/orderDetail'),
             hidden: true,
           },
+          {
+            path: 'restaurant',
+            component: () => import('@/views/HomePage/restaurant.vue'),
+            hidden: true,
+          },
         ],
         hidden: true
       }

@@ -33,9 +33,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select restaurant_id, name, description, location, phone, specialty, image, create_time from restaurant
     </sql>
 
-    <select id="selectRestaurantList" parameterType="Restaurant" resultMap="RestaurantResult">
+    <select id="selectRestaurantList" parameterType="Restaurant" resultMap="RestaurantMenuResult">
         <include refid="selectRestaurantVo"/>
-        <where>  
+        <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
         </where>
     </select>

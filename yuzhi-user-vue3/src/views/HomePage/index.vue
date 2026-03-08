@@ -13,6 +13,7 @@
                             <el-menu-item index="/index/home">首页</el-menu-item>
                             <el-menu-item index="/index/rooms">客房预订</el-menu-item>
                             <el-menu-item index="/index/orders">我的订单</el-menu-item>
+                            <el-menu-item index="/index/restaurant">餐饮服务</el-menu-item>
                             <el-menu-item index="/index/recharge">账户充值</el-menu-item>
                             <el-menu-item index="/index/profile">个人中心</el-menu-item>
                         </el-menu>
