@@ -11,12 +11,30 @@
                 <div class="header-center">
                     <div class="front-header-nav">
                         <el-menu :default-active="route.path" mode="horizontal" :router="true">
-                            <el-menu-item index="/index/home">首页</el-menu-item>
-                            <el-menu-item index="/index/rooms">客房预订</el-menu-item>
-                            <el-menu-item index="/index/orders">我的订单</el-menu-item>
-                            <el-menu-item index="/index/restaurant">餐饮服务</el-menu-item>
-                            <el-menu-item index="/index/recharge">账户充值</el-menu-item>
-                            <el-menu-item index="/index/profile">个人中心</el-menu-item>
+                            <el-menu-item index="/index/home">
+                                <el-icon><HomeFilled /></el-icon>
+                                <span>首页</span>
+                            </el-menu-item>
+                            <el-menu-item index="/index/rooms">
+                                <el-icon><OfficeBuilding /></el-icon>
+                                <span>客房预订</span>
+                            </el-menu-item>
+                            <el-menu-item index="/index/orders">
+                                <el-icon><List /></el-icon>
+                                <span>我的订单</span>
+                            </el-menu-item>
+                            <el-menu-item index="/index/restaurant">
+                                <el-icon><Food /></el-icon>
+                                <span>餐饮服务</span>
+                            </el-menu-item>
+                            <el-menu-item index="/index/recharge">
+                                <el-icon><Wallet /></el-icon>
+                                <span>账户充值</span>
+                            </el-menu-item>
+                            <el-menu-item index="/index/profile">
+                                <el-icon><User /></el-icon>
+                                <span>个人中心</span>
+                            </el-menu-item>
                         </el-menu>
                     </div>
                 </div>
@@ -59,6 +77,7 @@ import { getUser } from "@/api/system/user"
 import useUserStore from "@/store/modules/user.js";
 import {ElMessageBox} from "element-plus";
 import CustomerServiceChat from "@/components/CustomerService/Chat.vue";
+import {Food, HomeFilled, List, OfficeBuilding, User, Wallet} from "@element-plus/icons-vue";
 
 const userStore = useUserStore()
 const route = useRoute()

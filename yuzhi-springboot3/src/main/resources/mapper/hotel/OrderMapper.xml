@@ -20,21 +20,27 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="description"    column="description"    />
         <result property="image"    column="image"    />
         <result property="userName"    column="user_name"    />
+        <result property="room_id"    column="room_id"    />
     </resultMap>
 
     <sql id="selectOrderVo">
-        select order_id, category_id, check_in_date, check_out_date, nights, rooms, unit_price, total_price, status, user_id, create_time from `order`
+        select order_id, category_id, check_in_date, check_out_date, nights, rooms, unit_price, total_price, status, user_id, create_time ,room_id from `order`
     </sql>
+
+    <select id="selectGetRoomNum" resultType="integer">
+        select count(category_id) from room where category_id = #{categoryId} and status = "空闲"
+    </select>
 
     <select id="selectOrderList" parameterType="Order" resultMap="OrderResult">
         select o.order_id, o.category_id, o.check_in_date, o.check_out_date, o.nights,
-               o.rooms, o.unit_price, o.total_price, o.status, o.user_id, o.create_time,
-               rc.name, rc.description, rc.image,
+               o.rooms, o.unit_price, o.total_price, o.status, o.user_id, o.create_time,o.room_id,
+               ci.name, ci.description, ci.image,
                u.user_name
         from `order` o
-        left join room_category rc on o.category_id = rc.category_id
+        left join room_category ci on o.category_id = ci.category_id
         left join sys_user u on o.user_id = u.user_id
         <where>
+<!--            <if test="roomId != null  and roomId != ''"> and o.room_id = #{roomId}</if>-->
             <if test="categoryId != null  and categoryId != ''"> and o.category_id = #{categoryId}</if>
             <if test="status != null  and status != ''"> and o.status = #{status}</if>
             <if test="userId != null "> and o.user_id = #{userId}</if>
@@ -46,12 +52,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectOrderByOrderId" parameterType="String" resultMap="OrderResult">
         select o.order_id, o.category_id, o.check_in_date, o.check_out_date, o.nights,
-               o.rooms, o.unit_price, o.total_price, o.status, o.user_id, o.create_time,
-               rc.name, rc.description, rc.image,
+               o.rooms, o.unit_price, o.total_price, o.status, o.user_id, o.create_time, o.room_id,
+               ri.name, ri.description, ri.image,rm.room_id,rm.status,
                u.user_name
         from `order` o
-                 left join room_category rc on o.category_id = rc.category_id
+                 left join room_category ri on o.category_id = ri.category_id
                  left join sys_user u on o.user_id = u.user_id
+                left join room rm on o.room_id = rm.room_id
+
         where order_id = #{orderId}
     </select>
 
@@ -112,4 +120,5 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{orderId}
         </foreach>
     </delete>
+
 </mapper>

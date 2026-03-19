@@ -57,16 +57,16 @@
             <!--          v-hasPermi="['hotel:order:edit']"-->
             <!--        >修改</el-button>-->
             <!--      </el-col>-->
-            <!--      <el-col :span="1.5">-->
-            <!--        <el-button-->
-            <!--          type="danger"-->
-            <!--          plain-->
-            <!--          icon="Delete"-->
-            <!--          :disabled="multiple"-->
-            <!--          @click="handleDelete"-->
-            <!--          v-hasPermi="['hotel:order:remove']"-->
-            <!--        >删除</el-button>-->
-            <!--      </el-col>-->
+                  <el-col :span="1.5">
+                    <el-button
+                      type="danger"
+                      plain
+                      icon="Delete"
+                      :disabled="multiple"
+                      @click="handleDelete"
+                      v-hasPermi="['hotel:order:remove']"
+                    >删除</el-button>
+                  </el-col>
             <el-col :span="1.5">
                 <el-button
                     type="warning"
@@ -211,6 +211,7 @@ import CheckInModal from "@/views/hotel/order/CheckInModal.vue";
 import OrderDetail from "@/views/hotel/order/OrderDetail.vue";
 import {addCheckout} from "@/api/hotel/checkout.js";
 import {ElMessage} from "element-plus";
+import {checkRoomAvailability} from "@/api/hotel/room.js";
 
 const baseURL = import.meta.env.VITE_APP_BASE_API
 
@@ -387,21 +388,30 @@ const handleUpdate = (row) => {
 const submitForm = () => {
     proxy.$refs["orderRef"].validate(valid => {
         if (valid) {
-            if (form.value.orderId != null) {
-                updateOrder(form.value).then(response => {
-                    proxy.$modal.msgSuccess("修改成功")
-                    open.value = false
-                    getList()
-                })
-            } else {
-                addOrder(form.value).then(response => {
-                    proxy.$modal.msgSuccess("新增成功")
-                    open.value = false
-                    getList()
-                })
-            }
+            // 检查所选房型是否有空闲房间
+            checkRoomAvailability(form.value.categoryId).then(response => {
+                if (response.data === 0) {
+                    proxy.$modal.msgError("该房型暂无空闲房间，请选择其他房型");
+                    return;
+                }
+
+                // 有空闲房间，继续提交订单
+                if (form.value.orderId != null) {
+                    updateOrder(form.value).then(response => {
+                        proxy.$modal.msgSuccess("修改成功");
+                        open.value = false;
+                        getList();
+                    });
+                } else {
+                    addOrder(form.value).then(response => {
+                        proxy.$modal.msgSuccess("新增成功");
+                        open.value = false;
+                        getList();
+                    });
+                }
+            });
         }
-    })
+    });
 }
 
 /** 删除按钮操作 */
@@ -433,6 +443,33 @@ const getAllCategoryList = () => {
 
     })
 }
+
+
+// 监听房型选择变化
+watch(() => form.value.categoryId, (newVal) => {
+  if (newVal) {
+    checkRoomAvailability(newVal).then(response => {
+      if (response.data === 0) {
+        proxy.$modal.msgWarning("该房型暂无空闲房间");
+      }
+    });
+  }
+});
+
+// 获取房型列表时，同时获取每个房型的可用房间数量
+const getCategoryList = () => {
+  selectCategoryAllList().then(res => {
+    categoryList.value = res.data;
+    // 为每个房型添加可用房间数量
+    categoryList.value.forEach(category => {
+      checkRoomAvailability(category.roomCategoryId).then(response => {
+        category.availableCount = response.data;
+      });
+    });
+  });
+};
+
+
 
 getAllCategoryList()
 getList()

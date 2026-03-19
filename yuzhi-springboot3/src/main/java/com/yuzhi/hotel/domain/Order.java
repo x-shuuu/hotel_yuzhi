@@ -74,5 +74,7 @@ public class Order extends BaseEntity
     //创建人用户名
     private String userName;
 
+    //链接房间号
+    private String room_id;
 
 }

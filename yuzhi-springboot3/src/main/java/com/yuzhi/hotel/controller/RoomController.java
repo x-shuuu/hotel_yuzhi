@@ -4,14 +4,7 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.yuzhi.system.general.core.controller.BaseController;
 import com.yuzhi.system.general.core.domain.AjaxResult;
 
@@ -125,4 +118,15 @@ public class RoomController extends BaseController {
     public AjaxResult selectRoomNumberListByCategoryId(@PathVariable("categoryId") String categoryId) {
         return success(roomService.selectRoomNumberListByCategoryId(categoryId));
     }
+
+    @GetMapping("/checkAvailability")
+    public AjaxResult checkRoomAvailability(@RequestParam String categoryId) {
+        Room queryRoom = new Room();
+        queryRoom.setCategoryId(categoryId);
+        queryRoom.setStatus("空闲");
+
+        List<Room> availableRooms = roomService.selectRoomList(queryRoom);
+        return AjaxResult.success(availableRooms.size());
+    }
+
 }

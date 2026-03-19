@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+import com.yuzhi.hotel.mapper.RoomMapper;
 import com.yuzhi.system.domain.SysUser;
 import com.yuzhi.system.general.utils.DateUtils;
 import com.yuzhi.system.service.ISysUserService;
@@ -38,6 +39,11 @@ public class OrderServiceImpl implements IOrderService
 
     @Autowired
     private ISysUserService userService;
+
+    @Autowired
+    private RoomMapper roomMapper;
+
+    //private
 
     /**
      * 查询订单
@@ -76,12 +82,16 @@ public class OrderServiceImpl implements IOrderService
         //当前操作用户的用户ID
         Long loginUserId = getUserId();
 
+        Integer roomNum= orderMapper.selectGetRoomNum(order.getCategoryId());
+        System.out.println("剩余房间数为："+roomNum+"客户预定房间数："+order.getRooms());
         //查询用户支付前的余额
         BigDecimal oldBalance = userService.selectUserById(loginUserId).getBalance();
 
         //如果余额小于总价, 不能预订
         if (oldBalance.compareTo(order.getTotalPrice()) < 0) {
             throw new RuntimeException("您的余额不足, 请充值后预订");
+        } else if (roomNum < order.getRooms()) {
+            throw new RuntimeException("该房间已被预订, 请选择其他房间");
         } else {
             //余额充足, 进行扣款
             SysUser user = new SysUser();

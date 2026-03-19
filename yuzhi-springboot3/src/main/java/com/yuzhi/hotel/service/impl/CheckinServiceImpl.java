@@ -25,7 +25,7 @@ import org.springframework.util.CollectionUtils;
  * @date 2026-03-07
  */
 @Service
-public class CheckinServiceImpl implements ICheckinService
+public class  CheckinServiceImpl implements ICheckinService
 {
     @Autowired
     private CheckinMapper checkinMapper;

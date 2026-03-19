@@ -50,3 +50,12 @@ export function selectRoomNumberListByCategoryId(categoryId) {
     method: 'get'
   })
 }
+
+// 检查房间可用性
+export function checkRoomAvailability(categoryId) {
+  return request({
+    url: '/hotel/room/checkAvailability',
+    method: 'get',
+    params: { categoryId: categoryId }
+  });
+}

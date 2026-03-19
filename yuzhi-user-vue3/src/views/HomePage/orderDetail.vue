@@ -71,7 +71,8 @@
 
 <script setup>
 import {useRoute, useRouter} from "vue-router";
-import {getOrder} from "@/api/hotel/order.js";
+import {addOrder, getOrder, updateOrder} from "@/api/hotel/order.js";
+import request from "@/utils/request.js";
 
 const route = useRoute()
 const router = useRouter()
@@ -93,6 +94,8 @@ onMounted(() => {
         order.value = res.data
     })
 })
+
+
 </script>
 
 <style scoped>
